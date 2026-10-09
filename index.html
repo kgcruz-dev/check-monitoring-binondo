@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Check Management Monitoring</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 35px 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #082d6c;
+            color: #10264a;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.18);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #10264a;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+            color: #10264a;
+        }
+
+        .required {
+            font-size: 12px;
+            color: #718096;
+            font-weight: normal;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 46px;
+            border: 1px solid #cbd5e0;
+            border-radius: 7px;
+            padding: 0 12px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #1295ef;
+            box-shadow: 0 0 0 3px rgba(18,149,239,.10);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .check-card {
+            border: 1px solid #dce3ed;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            background: #f9fbfd;
+        }
+
+        .check-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 18px;
+            background: #edf4fb;
+        }
+
+        .check-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .check-content {
+            padding: 20px;
+        }
+
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .remove-btn {
+            border: none;
+            background: #dc3545;
+            color: white;
+            padding: 8px 13px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #bf2e3b;
+        }
+
+        .add-btn {
+            width: 100%;
+            height: 48px;
+            border: 2px dashed #1295ef;
+            border-radius: 8px;
+            background: #f3faff;
+            color: #087ecf;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .add-btn:hover {
+            background: #e9f6ff;
+        }
+
+        .summary {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 9px;
+            background: #eef6fc;
+            border: 1px solid #d7e9f7;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+
+        .summary-value {
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 54px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 8px;
+            background: #1295ef;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #087fcf;
+        }
+
+        .submit-btn:disabled {
+            background: #8eb6d3;
+            cursor: not-allowed;
+        }
+
+        #progressArea {
+            display: none;
+            margin-top: 22px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 15px;
+            background: #dce3eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background: #1295ef;
+            transition: width .25s ease;
+        }
+
+        #progressText {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        #resultBox {
+            display: none;
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .success {
+            background: #e7f7ec;
+            border: 1px solid #8fd3a4;
+            color: #176a35;
+        }
+
+        .error {
+            background: #fdebed;
+            border: 1px solid #e6a0a7;
+            color: #922934;
+        }
+
+        @media (max-width: 900px) {
+            .check-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .check-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            Check Management Monitoring
+        </h1>
+
+        <div class="subtitle">
+            Batch Check Encoding
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Account Name
+                <span class="required">
+                    (required)
+                </span>
+            </label>
+
+            <input
+                id="accountName"
+                type="text"
+                placeholder="E.G Kian Cruz"
+            >
+
+        </div>
+
+
+        <div class="section-header">
+
+            <h2>
+                Checks
+            </h2>
+
+            <span id="checkCounterText">
+                0 Check(s)
+            </span>
+
+        </div>
+
+
+        <div id="checksContainer"></div>
+
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="addCheck()"
+        >
+            + ADD CHECK
+        </button>
+
+
+        <div class="summary">
+
+            <div class="summary-row">
+
+                <span>
+                    Total Checks
+                </span>
+
+                <span
+                    id="totalChecks"
+                    class="summary-value"
+                >
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Total Check Amount
+                </span>
+
+                <span
+                    id="totalAmount"
+                    class="summary-value"
+                >
+                    ₱0.00
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="submitButton"
+            class="submit-btn"
+            onclick="submitAllChecks()"
+        >
+            CREATE CHECKS IN MONDAY
+        </button>
+
+
+        <div id="progressArea">
+
+            <div class="progress-track">
+
+                <div id="progressBar"></div>
+
+            </div>
+
+            <div id="progressText">
+                Preparing...
+            </div>
+
+        </div>
+
+
+        <div id="resultBox"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   MONDAY CONFIGURATION
+========================================================= */
+
+const MONDAY_TOKEN =
+    "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjY5ODI5NDM5MSwiYWFpIjoxMSwidWlkIjoxMTA1OTIwMDAsImlhZCI6IjIwMjYtMDgtMzBUMDA6MDA6MzMuMDAwWiIsInBlciI6Im1lOndyaXRlIiwiYWN0aWQiOjExNDM1NjAxLCJyZ24iOiJ1c2UxIn0.l_xP1amMfSBaQMl1c7f033mVqQPjxEZYYkfuEuRYSOU";
+
+const BOARD_ID =
+    "18434713998";
+
+const MONDAY_API =
+    "https://api.monday.com/v2";
+
+
+/* =========================================================
+   FUND SOURCE → GROUP
+========================================================= */
+
+const FUND_SOURCE_GROUPS = {
+
+    "In House":
+        "group_mm7wnnsr",
+
+    "Retail":
+        "group_mm7wb560",
+
+    "Declared":
+        "group_mm7wnjkp"
+
+};
+
+
+/* =========================================================
+   COLUMN IDS
+========================================================= */
+
+const COLUMN_IDS = {
+
+    BANK:
+        "status",
+
+    BRANCH:
+        "text5",
+
+    CHECK_DATE:
+        "date4",
+
+    CHECK_AMOUNT:
+        "numbers",
+
+    CHECK_NO:
+        "text6",
+
+    FUND_SOURCE:
+        "color_mm7wmbrf"
+
+};
+
+
+/* =========================================================
+   BANKS
+========================================================= */
+
+const BANKS = [
+
+    "ALL BANK",
+    "AUB",
+    "BANK OF MAKATI",
+    "BDO",
+    "BDO - NB",
+    "BOC",
+    "BPI",
+    "BPI FS",
+    "CB",
+    "CBS",
+    "CITYSTATE",
+    "CTBC",
+    "DBP",
+    "GM",
+    "LB",
+    "MAYBANK",
+    "MB",
+    "PBB",
+    "PBCOM",
+    "PENBANK",
+    "PHILTRUST",
+    "PNB",
+    "PSB",
+    "PSBC",
+    "RB",
+    "RCBC",
+    "SB",
+    "SBOA",
+    "UB",
+    "UCPB",
+    "VALLEY BANK",
+    "VB",
+    "WB"
+
+];
+
+
+/* =========================================================
+   MONDAY BANK LABEL MAPPING
+========================================================= */
+
+const BANK_LABEL_MAP = {
+
+    "ALL BANK":
+        "ALLBANK",
+
+    "PENBANK":
+        "PEN BANK",
+
+    "BANK OF MAKATI":
+        "Bank Of Makati"
+
+};
+
+
+/* =========================================================
+   FUND SOURCES
+========================================================= */
+
+const FUND_SOURCES = [
+
+    "In House",
+    "Retail",
+    "Declared"
+
+];
+
+
+let checkCounter = 0;
+
+
+/* =========================================================
+   BANK OPTIONS
+========================================================= */
+
+function getBankOptions() {
+
+    let html = `
+
+        <option value="">
+            Select Bank
+        </option>
+
+    `;
+
+
+    BANKS.forEach(bank => {
+
+        html += `
+
+            <option value="${bank}">
+                ${bank}
+            </option>
+
+        `;
+
+    });
+
+
+    return html;
+}
+
+
+/* =========================================================
+   FUND SOURCE OPTIONS
+========================================================= */
+
+function getFundSourceOptions() {
+
+    let html = `
+
+        <option value="">
+            Select Fund Source
+        </option>
+
+    `;
+
+
+    FUND_SOURCES.forEach(source => {
+
+        html += `
+
+            <option value="${source}">
+                ${source}
+            </option>
+
+        `;
+
+    });
+
+
+    return html;
+}
+
+
+/* =========================================================
+   ADD CHECK
+========================================================= */
+
+function addCheck() {
+
+    checkCounter++;
+
+
+    const container =
+        document.getElementById(
+            "checksContainer"
+        );
+
+
+    /*
+    Get values from Check 1.
+
+    Only copy:
+    - Bank
+    - Branch
+    - Check Amount
+    - Fund Source
+
+    Do NOT copy:
+    - Check Date
+    - Check No.
+    */
+
+    let copiedBank = "";
+    let copiedBranch = "";
+    let copiedAmount = "";
+    let copiedFundSource = "";
+
+
+    const firstCard =
+        document.querySelector(
+            ".check-card"
+        );
+
+
+    if (firstCard) {
+
+        copiedBank =
+            firstCard
+                .querySelector(
+                    ".bank"
+                )
+                .value;
+
+
+        copiedBranch =
+            firstCard
+                .querySelector(
+                    ".branch"
+                )
+                .value;
+
+
+        copiedAmount =
+            firstCard
+                .querySelector(
+                    ".check-amount"
+                )
+                .value;
+
+
+        copiedFundSource =
+            firstCard
+                .querySelector(
+                    ".fund-source"
+                )
+                .value;
+
+    }
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "check-card";
+
+
+    card.innerHTML = `
+
+        <div class="check-header">
+
+            <div class="check-title">
+                Check
+            </div>
+
+            <button
+                type="button"
+                class="remove-btn"
+                onclick="removeCheck(this)"
+            >
+                Remove
+            </button>
+
+        </div>
+
+
+        <div class="check-content">
+
+            <div class="check-grid">
+
+
+                <!-- BANK -->
+
+                <div class="form-group">
+
+                    <label>
+                        Bank
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <select class="bank">
+
+                        ${getBankOptions()}
+
+                    </select>
+
+                </div>
+
+
+                <!-- BRANCH -->
+
+                <div class="form-group">
+
+                    <label>
+                        Branch
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <input
+                        type="text"
+                        class="branch"
+                        placeholder="E.G BGC"
+                        value="${copiedBranch}"
+                    >
+
+                </div>
+
+
+                <!-- CHECK DATE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Check Date
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <input
+                        type="date"
+                        class="check-date"
+                    >
+
+                </div>
+
+
+                <!-- CHECK AMOUNT -->
+
+                <div class="form-group">
+
+                    <label>
+                        Check Amount
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <input
+                        type="number"
+                        class="check-amount"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="100000"
+                        value="${copiedAmount}"
+                        oninput="updateSummary()"
+                    >
+
+                </div>
+
+
+                <!-- CHECK NUMBER -->
+
+                <div class="form-group">
+
+                    <label>
+                        Check No.
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <input
+                        type="text"
+                        class="check-no"
+                        placeholder="Enter Check Number"
+                    >
+
+                </div>
+
+
+                <!-- FUND SOURCE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Fund Source
+                        <span class="required">
+                            (required)
+                        </span>
+                    </label>
+
+                    <select class="fund-source">
+
+                        ${getFundSourceOptions()}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        card
+    );
+
+
+    /*
+    Set copied dropdown values
+    after the HTML is created.
+    */
+
+    const newBank =
+        card.querySelector(
+            ".bank"
+        );
+
+
+    const newFundSource =
+        card.querySelector(
+            ".fund-source"
+        );
+
+
+    if (copiedBank) {
+
+        newBank.value =
+            copiedBank;
+
+    }
+
+
+    if (copiedFundSource) {
+
+        newFundSource.value =
+            copiedFundSource;
+
+    }
+
+
+    renumberChecks();
+
+    updateSummary();
+}
+
+/* =========================================================
+   REMOVE CHECK
+========================================================= */
+
+function removeCheck(button) {
+
+    const cards =
+        document.querySelectorAll(
+            ".check-card"
+        );
+
+
+    if (
+        cards.length === 1
+    ) {
+
+        alert(
+            "At least one check is required."
+        );
+
+        return;
+    }
+
+
+    button
+        .closest(
+            ".check-card"
+        )
+        .remove();
+
+
+    renumberChecks();
+
+    updateSummary();
+}
+
+
+/* =========================================================
+   RENUMBER
+========================================================= */
+
+function renumberChecks() {
+
+    const cards =
+        document.querySelectorAll(
+            ".check-card"
+        );
+
+
+    cards.forEach(
+        (card, index) => {
+
+            card
+                .querySelector(
+                    ".check-title"
+                )
+                .textContent =
+                    "Check " +
+                    (index + 1);
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "checkCounterText"
+        )
+        .textContent =
+            cards.length +
+            " Check(s)";
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+function updateSummary() {
+
+    const cards =
+        document.querySelectorAll(
+            ".check-card"
+        );
+
+
+    let total = 0;
+
+
+    cards.forEach(card => {
+
+        const amount =
+            parseFloat(
+
+                card
+                    .querySelector(
+                        ".check-amount"
+                    )
+                    .value
+
+            ) || 0;
+
+
+        total += amount;
+
+    });
+
+
+    document
+        .getElementById(
+            "totalChecks"
+        )
+        .textContent =
+            cards.length;
+
+
+    document
+        .getElementById(
+            "checkCounterText"
+        )
+        .textContent =
+            cards.length +
+            " Check(s)";
+
+
+    document
+        .getElementById(
+            "totalAmount"
+        )
+        .textContent =
+
+            total.toLocaleString(
+                "en-PH",
+                {
+                    style:
+                        "currency",
+
+                    currency:
+                        "PHP"
+                }
+            );
+}
+
+
+/* =========================================================
+   VALIDATION
+========================================================= */
+
+function validateForm() {
+
+    const accountName =
+        document
+            .getElementById(
+                "accountName"
+            )
+            .value
+            .trim();
+
+
+    if (!accountName) {
+
+        alert(
+            "Please enter the Account Name."
+        );
+
+        return false;
+    }
+
+
+    if (
+        !MONDAY_TOKEN ||
+        MONDAY_TOKEN ===
+        "PASTE_YOUR_EXISTING_MONDAY_API_TOKEN_HERE"
+    ) {
+
+        alert(
+            "Please add your monday API token."
+        );
+
+        return false;
+    }
+
+
+    const cards =
+        document.querySelectorAll(
+            ".check-card"
+        );
+
+
+    const duplicateSet =
+        new Set();
+
+
+    for (
+        let i = 0;
+        i < cards.length;
+        i++
+    ) {
+
+        const card =
+            cards[i];
+
+
+        const bank =
+            card.querySelector(
+                ".bank"
+            ).value;
+
+
+        const branch =
+            card.querySelector(
+                ".branch"
+            ).value.trim();
+
+
+        const date =
+            card.querySelector(
+                ".check-date"
+            ).value;
+
+
+        const amount =
+            card.querySelector(
+                ".check-amount"
+            ).value;
+
+
+        const checkNo =
+            card.querySelector(
+                ".check-no"
+            ).value.trim();
+
+
+        const fundSource =
+            card.querySelector(
+                ".fund-source"
+            ).value;
+
+
+        if (
+            !bank ||
+            !branch ||
+            !date ||
+            !amount ||
+            !checkNo ||
+            !fundSource
+        ) {
+
+            alert(
+
+                "Please complete all fields for Check " +
+                (i + 1) +
+                "."
+
+            );
+
+            return false;
+        }
+
+
+        if (
+            !FUND_SOURCE_GROUPS[
+                fundSource
+            ]
+        ) {
+
+            alert(
+
+                "No monday group mapped for Fund Source: " +
+                fundSource
+
+            );
+
+            return false;
+        }
+
+
+        if (
+            Number(amount) <= 0
+        ) {
+
+            alert(
+
+                "Check " +
+                (i + 1) +
+                " must have an amount greater than zero."
+
+            );
+
+            return false;
+        }
+
+
+        const duplicateKey =
+
+            bank
+                .trim()
+                .toUpperCase()
+
+            +
+
+            "|"
+
+            +
+
+            checkNo
+                .trim()
+                .toUpperCase();
+
+
+        if (
+            duplicateSet.has(
+                duplicateKey
+            )
+        ) {
+
+            alert(
+
+                "Duplicate check detected: " +
+                bank +
+                " / " +
+                checkNo
+
+            );
+
+            return false;
+        }
+
+
+        duplicateSet.add(
+            duplicateKey
+        );
+    }
+
+
+    return true;
+}
+
+
+/* =========================================================
+   GET CHECKS
+========================================================= */
+
+function getChecks() {
+
+    const cards =
+        document.querySelectorAll(
+            ".check-card"
+        );
+
+
+    const checks =
+        [];
+
+
+    cards.forEach(
+        (card, index) => {
+
+            checks.push({
+
+                sequence:
+                    index + 1,
+
+                bank:
+                    card.querySelector(
+                        ".bank"
+                    ).value,
+
+                branch:
+                    card.querySelector(
+                        ".branch"
+                    ).value.trim(),
+
+                check_date:
+                    card.querySelector(
+                        ".check-date"
+                    ).value,
+
+                check_amount:
+                    Number(
+                        card.querySelector(
+                            ".check-amount"
+                        ).value
+                    ),
+
+                check_no:
+                    card.querySelector(
+                        ".check-no"
+                    ).value.trim(),
+
+                fund_source:
+                    card.querySelector(
+                        ".fund-source"
+                    ).value
+
+            });
+
+        }
+    );
+
+
+    return checks;
+}
+
+
+/* =========================================================
+   CREATE MONDAY ITEM
+========================================================= */
+
+async function createMondayItem(
+    accountName,
+    check
+) {
+
+    /*
+    Determine destination group
+    from the selected Fund Source.
+    */
+
+    const targetGroup =
+        FUND_SOURCE_GROUPS[
+            check.fund_source
+        ];
+
+
+    if (!targetGroup) {
+
+        throw new Error(
+
+            "No monday group mapped for Fund Source: " +
+            check.fund_source
+
+        );
+    }
+
+
+    /*
+    Translate form bank label
+    to monday status label
+    if required.
+    */
+
+    const mondayBankLabel =
+        BANK_LABEL_MAP[
+            check.bank
+        ] || check.bank;
+
+
+    const columnValues = {};
+
+
+    columnValues[
+        COLUMN_IDS.BANK
+    ] = {
+
+        label:
+            mondayBankLabel
+
+    };
+
+
+    columnValues[
+        COLUMN_IDS.BRANCH
+    ] =
+        check.branch;
+
+
+    columnValues[
+        COLUMN_IDS.CHECK_DATE
+    ] = {
+
+        date:
+            check.check_date
+
+    };
+
+
+    columnValues[
+        COLUMN_IDS.CHECK_AMOUNT
+    ] =
+        check.check_amount;
+
+
+    columnValues[
+        COLUMN_IDS.CHECK_NO
+    ] =
+        check.check_no;
+
+
+    columnValues[
+        COLUMN_IDS.FUND_SOURCE
+    ] = {
+
+        label:
+            check.fund_source
+
+    };
+
+
+    const query = `
+
+        mutation CreateCheck(
+            $boardId: ID!,
+            $groupId: String!,
+            $itemName: String!,
+            $columnValues: JSON!
+        ) {
+
+            create_item(
+
+                board_id: $boardId,
+
+                group_id: $groupId,
+
+                item_name: $itemName,
+
+                column_values: $columnValues
+
+            ) {
+
+                id
+                name
+
+            }
+
+        }
+
+    `;
+
+
+    const variables = {
+
+        boardId:
+            BOARD_ID,
+
+        groupId:
+            targetGroup,
+
+        itemName:
+            accountName,
+
+        columnValues:
+            JSON.stringify(
+                columnValues
+            )
+
+    };
+
+
+    console.log(
+        "Creating check:",
+        {
+            accountName,
+            fundSource:
+                check.fund_source,
+            group:
+                targetGroup,
+            checkNo:
+                check.check_no
+        }
+    );
+
+
+    const response =
+        await fetch(
+            MONDAY_API,
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "Authorization":
+                        MONDAY_TOKEN,
+
+                    "API-Version":
+                        "2026-07"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        query:
+                            query,
+
+                        variables:
+                            variables
+
+                    })
+
+            }
+        );
+
+
+    const result =
+        await response.json();
+
+
+    console.log(
+        "monday response:",
+        result
+    );
+
+
+    if (
+        !response.ok
+    ) {
+
+        throw new Error(
+
+            "HTTP Error " +
+            response.status
+
+        );
+    }
+
+
+    if (
+        result.errors &&
+        result.errors.length
+    ) {
+
+        throw new Error(
+
+            result.errors
+                .map(
+                    error =>
+                        error.message
+                )
+                .join(
+                    " | "
+                )
+
+        );
+    }
+
+
+    if (
+        !result.data ||
+        !result.data.create_item
+    ) {
+
+        throw new Error(
+            "monday did not return a created item."
+        );
+    }
+
+
+    return {
+
+        ...result.data.create_item,
+
+        targetGroup:
+            targetGroup,
+
+        fundSource:
+            check.fund_source
+
+    };
+}
+
+
+/* =========================================================
+   SUBMIT ALL CHECKS
+========================================================= */
+
+async function submitAllChecks() {
+
+    if (
+        !validateForm()
+    ) {
+
+        return;
+    }
+
+
+    const accountName =
+        document
+            .getElementById(
+                "accountName"
+            )
+            .value
+            .trim();
+
+
+    const checks =
+        getChecks();
+
+
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
+
+
+    const progressArea =
+        document.getElementById(
+            "progressArea"
+        );
+
+
+    const progressBar =
+        document.getElementById(
+            "progressBar"
+        );
+
+
+    const progressText =
+        document.getElementById(
+            "progressText"
+        );
+
+
+    const resultBox =
+        document.getElementById(
+            "resultBox"
+        );
+
+
+    submitButton.disabled =
+        true;
+
+
+    submitButton.textContent =
+        "CREATING CHECKS...";
+
+
+    progressArea.style.display =
+        "block";
+
+
+    progressBar.style.width =
+        "0%";
+
+
+    resultBox.style.display =
+        "none";
+
+
+    let successCount = 0;
+
+
+    const successful = [];
+    const failed = [];
+
+
+    for (
+        let i = 0;
+        i < checks.length;
+        i++
+    ) {
+
+        const check =
+            checks[i];
+
+
+        progressText.textContent =
+
+            "Creating Check " +
+            (i + 1) +
+            " of " +
+            checks.length +
+            " — " +
+            check.check_no +
+            " → " +
+            check.fund_source;
+
+
+        try {
+
+            const createdItem =
+                await createMondayItem(
+                    accountName,
+                    check
+                );
+
+
+            successCount++;
+
+
+            successful.push({
+
+                check_no:
+                    check.check_no,
+
+                fund_source:
+                    check.fund_source,
+
+                group:
+                    createdItem.targetGroup,
+
+                item_id:
+                    createdItem.id
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(
+
+                "Failed Check:",
+
+                check.check_no,
+
+                error
+
+            );
+
+
+            failed.push({
+
+                check_no:
+                    check.check_no,
+
+                bank:
+                    check.bank,
+
+                fund_source:
+                    check.fund_source,
+
+                error:
+                    error.message
+
+            });
+
+        }
+
+
+        const percentage =
+            Math.round(
+
+                (
+                    (i + 1) /
+                    checks.length
+                )
+
+                * 100
+
+            );
+
+
+        progressBar.style.width =
+
+            percentage +
+            "%";
+    }
+
+
+    progressText.textContent =
+        "Finished.";
+
+
+    resultBox.style.display =
+        "block";
+
+
+    if (
+        failed.length === 0
+    ) {
+
+        resultBox.className =
+            "success";
+
+
+        let createdHTML =
+            "";
+
+
+        successful.forEach(item => {
+
+            createdHTML += `
+
+                <div
+                    style="
+                        margin-top:8px;
+                    "
+                >
+
+                    ${item.check_no}
+                    →
+                    ${item.fund_source}
+
+                </div>
+
+            `;
+
+        });
+
+
+        resultBox.innerHTML = `
+
+            <strong>
+                All Checks Created Successfully
+            </strong>
+
+            <br><br>
+
+            Account Name:
+            ${accountName}
+
+            <br>
+
+            Total Checks:
+            ${checks.length}
+
+            <br>
+
+            Successfully Created:
+            ${successCount}
+
+            <br>
+
+            Failed:
+            0
+
+            <br><br>
+
+            <strong>
+                Created:
+            </strong>
+
+            ${createdHTML}
+
+        `;
+
+    }
+
+    else {
+
+        resultBox.className =
+            "error";
+
+
+        let errorsHTML =
+            "";
+
+
+        failed.forEach(item => {
+
+            errorsHTML += `
+
+                <div
+                    style="
+                        margin-top:10px;
+                        padding-top:10px;
+                        border-top:1px solid rgba(0,0,0,.1);
+                    "
+                >
+
+                    <strong>
+
+                        ${item.bank}
+
+                        —
+
+                        ${item.check_no}
+
+                    </strong>
+
+                    <br>
+
+                    Fund Source:
+                    ${item.fund_source}
+
+                    <br>
+
+                    ${item.error}
+
+                </div>
+
+            `;
+
+        });
+
+
+        resultBox.innerHTML = `
+
+            <strong>
+                Batch Completed With Errors
+            </strong>
+
+            <br><br>
+
+            Successful:
+            ${successCount}
+
+            <br>
+
+            Failed:
+            ${failed.length}
+
+            ${errorsHTML}
+
+        `;
+
+    }
+
+
+    submitButton.disabled =
+        false;
+
+
+    submitButton.textContent =
+        "CREATE CHECKS IN MONDAY";
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+addCheck();
+
+</script>
+
+</body>
+</html>
